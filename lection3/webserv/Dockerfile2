@@ -1,0 +1,7 @@
+FROM maven:3.8-openjdk-11
+
+COPY . /opt/webserver/
+WORKDIR /opt/webserver/
+RUN mvn clean package
+EXPOSE 8080
+CMD ["java", "-jar", "target/websrv-0.0.1.jar"]

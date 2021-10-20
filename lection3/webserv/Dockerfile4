@@ -1,0 +1,11 @@
+FROM maven:3.8-openjdk-11 AS build
+
+WORKDIR /opt/webserver-build/
+COPY . .
+RUN mvn clean package 
+
+FROM amazoncorretto:11.0.11-alpine
+WORKDIR /opt/webserver
+COPY --from=build /opt/webserver-build/target/websrv-0.0.1.jar ./
+EXPOSE 8080
+CMD ["java", "-jar", "websrv-0.0.1.jar"]

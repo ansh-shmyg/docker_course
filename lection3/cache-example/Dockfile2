@@ -1,0 +1,9 @@
+FROM debian
+
+# This command creates 1 Gb file "random-big-file.bin"
+# Let's delete this 'cache' file in the different way
+RUN dd if=/dev/urandom of=random-big-file.bin count=1024 bs=1M && \
+rm random-big-file.bin
+
+
+CMD ["sh"]

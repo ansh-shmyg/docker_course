@@ -1,0 +1,9 @@
+FROM debian
+
+# This command creates 1 Gb file "random-big-file.bin"
+RUN dd if=/dev/urandom of=random-big-file.bin count=1024 bs=1M
+# This commands deletes this file
+RUN rm random-big-file.bin
+# But will this big file will be delete?
+
+CMD ["sh"]

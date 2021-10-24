@@ -4,7 +4,7 @@ WORKDIR /opt/webserver-build/
 COPY . .
 RUN mvn clean package 
 
-FROM amazoncorretto:11.0.11-alpine
+FROM openjdk:11.0.11-jre-slim
 WORKDIR /opt/webserver
 COPY --from=build /opt/webserver-build/target/websrv-0.0.1.jar ./
 EXPOSE 8080

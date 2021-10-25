@@ -1,0 +1,20 @@
+FROM maven:3.8-openjdk-11 AS build
+
+WORKDIR /opt/webserver-build/
+COPY . .
+RUN mvn clean package 
+
+FROM amazoncorretto:11.0.11-alpine
+WORKDIR /opt/webserver
+COPY --from=build /opt/webserver-build/target/websrv-0.0.1.jar ./
+RUN adduser -H -D -h /opt/webserver/ -s /bin/false app && \ 
+ chown -R app:app /opt/webserver && \
+ chmod 400 /opt/webserver/websrv-0.0.1.jar
+# Set some env
+ENV DB_ADDRESS="change.me.com"
+ENV DB_USER="not-real-user"
+ENV DB_PASS=""
+EXPOSE 8080
+USER app
+ENTRYPOINT [ "java" ]
+CMD ["-jar", "websrv-0.0.1.jar"]

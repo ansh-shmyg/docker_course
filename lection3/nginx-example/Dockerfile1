@@ -1,7 +1,7 @@
 FROM debian
 
 RUN apt-get update
-RUN apt-get install -y nginx
+RUN apt-get install -y procps nginx
 
 COPY index.html /var/www/html/index.html
 EXPOSE 80

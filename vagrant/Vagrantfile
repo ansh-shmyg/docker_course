@@ -1,0 +1,29 @@
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/focal64"
+  
+  if Vagrant.has_plugin?("vagrant-vbguest") then
+    config.vbguest.auto_update = false
+  end
+
+  config.vm.provider :virtualbox do |v|
+    v.memory = 4096
+    v.cpus = 3
+    v.name = "default-docker"
+    v.customize ['modifyvm', :id, '--graphicscontroller', 'vmsvga']
+  end
+
+  config.vm.provision :shell, inline: "sudo apt update -y"
+  config.vm.provision :shell, inline: "sudo apt install ubuntu-desktop ca-certificates curl gnupg lsb-release git -y"
+  config.vm.provision :shell, inline: "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg"
+  config.vm.provision :shell, inline: 'echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null'
+  config.vm.provision :shell, inline: "sudo apt update -y"
+  config.vm.provision :shell, inline: "sudo apt install docker-ce docker-ce-cli containerd.io -y"
+  # Configure docker user
+  config.vm.provision :shell, inline: "sudo useradd -m -g docker -s /bin/bash docker"
+  config.vm.provision :shell, inline: 'echo -e "docker\ndocker" | sudo passwd docker'
+  config.vm.provision :shell, inline: "echo 'docker ALL=(ALL) NOPASSWD:ALL' | sudo tee /etc/sudoers.d/docker"
+  config.vm.provision :shell, inline: "sudo shutdown -r 0"
+  # TO do install oracle VM box image
+end
